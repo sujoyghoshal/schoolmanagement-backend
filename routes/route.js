@@ -1,9 +1,10 @@
 const router = require('express').Router();
-const express=require('express');
+const express = require('express');
 router.use(express.json());
+const adminschema = require('../models/adminSchema.js');
 // const { adminRegister, adminLogIn, deleteAdmin, getAdminDetail, updateAdmin } = require('../controllers/admin-controller.js');
 
-const { adminRegister, adminLogIn, getAdminDetail} = require('../controllers/admin-controller.js');
+const { adminRegister, adminLogIn, getAdminDetail } = require('../controllers/admin-controller.js');
 
 const { sclassCreate, sclassList, deleteSclass, deleteSclasses, getSclassDetail, getSclassStudents } = require('../controllers/class-controller.js');
 const { complainCreate, complainList } = require('../controllers/complain-controller.js');
@@ -25,17 +26,28 @@ const {
     removeStudentAttendance } = require('../controllers/student_controller.js');
 const { subjectCreate, classSubjects, deleteSubjectsByClass, getSubjectDetail, deleteSubject, freeSubjectList, allSubjects, deleteSubjects } = require('../controllers/subject-controller.js');
 const { teacherRegister, teacherLogIn, getTeachers, getTeacherDetail, deleteTeachers, deleteTeachersByClass, deleteTeacher, updateTeacherSubject, teacherAttendance } = require('../controllers/teacher-controller.js');
+const { json } = require('body-parser');
 
 //*Admin
 router.get('/', (req, res) => {
     res.json(
-        { 
-            Message: 'Server is running on port 5000' ,
-            Backend:"backend is starting...",
-            ProjectName:"School Management System",
+        {
+            Message: 'Server is running on port 5000',
+            Backend: "backend is starting...",
+            ProjectName: "School Management System",
         }
     );
 });
+router.get('/display', (req, res) => {
+    adminschema.find({})
+        .then(data => {
+            res.json(data);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+});
+
 router.post('/AdminReg', adminRegister);
 router.post('/AdminLogin', adminLogIn);
 
@@ -44,7 +56,6 @@ router.get("/Admin/:id", getAdminDetail)
 
 // router.put("/Admin/:id", updateAdmin)
 
-// Student
 
 router.post('/StudentReg', studentRegister);
 router.post('/StudentLogin', studentLogIn)
